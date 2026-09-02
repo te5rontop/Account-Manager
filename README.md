@@ -11,7 +11,7 @@
 ![Java](https://img.shields.io/badge/Java-25%2B-E76F00)
 [![Downloads](https://img.shields.io/github/downloads/te5rontop/Account-Manager/total?label=downloads)](https://github.com/te5rontop/Account-Manager/releases)
 
-[**Download Latest Release**](https://github.com/te5rontop/Account-Manager/releases/latest) · [**Download v1.0.0 JAR**](https://github.com/te5rontop/Account-Manager/releases/download/v1.0.0/account-manager-1.0.0.jar) · [**Changelog**](CHANGELOG.md)
+[**Download Latest Release**](https://github.com/te5rontop/Account-Manager/releases/latest) · [**Download v1.0.1 JAR**](https://github.com/te5rontop/Account-Manager/releases/download/v1.0.1/account-manager-1.0.1.jar) · [**Changelog**](CHANGELOG.md)
 
 </div>
 
@@ -38,7 +38,7 @@ A client-side **Minecraft: Java Edition Fabric mod** focused on Microsoft sign-i
 - Classic / Slim player model preview
 - Minecraft skin upload integration when Minecraft Services access is available
 - Minecraft IGN change integration when Minecraft Services access is available
-- In-memory authentication state with no intentional token storage on disk
+- In-memory authentication state with stale-session protection
 - Custom Account Manager UI and in-game branding
 
 ## Screenshots
@@ -59,7 +59,7 @@ A client-side **Minecraft: Java Edition Fabric mod** focused on Microsoft sign-i
 
 The recommended installation file is the normal release JAR:
 
-**[Download Account Manager v1.0.0](https://github.com/te5rontop/Account-Manager/releases/download/v1.0.0/account-manager-1.0.0.jar)**
+**[Download Account Manager v1.0.1](https://github.com/te5rontop/Account-Manager/releases/download/v1.0.1/account-manager-1.0.1.jar)**
 
 You can also browse all published versions on the **[Releases page](https://github.com/te5rontop/Account-Manager/releases)**.
 
@@ -100,7 +100,7 @@ This can affect profile loading, IGN / UUID retrieval, skin uploading and Minecr
 
 ### Which Minecraft version is supported?
 
-Account Manager v1.0.0 is built for **Minecraft: Java Edition 26.1.2**.
+Account Manager v1.0.1 is built for **Minecraft: Java Edition 26.1.2**.
 
 ### Do I need Fabric API?
 
@@ -114,7 +114,7 @@ Use **Java 25 or newer** for this release.
 
 Download the normal release file:
 
-`account-manager-1.0.0.jar`
+`account-manager-1.0.1.jar`
 
 Do not install a `-sources.jar` as the normal mod.
 
@@ -146,7 +146,9 @@ Account Manager is designed as a public/native desktop OAuth client.
 - No client secret is embedded in the mod.
 - Access tokens are intended to remain only in memory while Minecraft is running.
 - Tokens are not intentionally displayed in the UI or written to local configuration files.
-- Clearing the account state removes the mod's in-memory authentication state.
+- Clearing the account state invalidates the current in-memory authentication session.
+- Stale asynchronous authentication results are discarded after a new sign-in or account clear.
+- Minecraft Services requests use bounded connection/request timeouts.
 
 Never send Microsoft passwords, access tokens, refresh tokens, Xbox/XSTS tokens, or authorization codes to anyone claiming to provide support for this mod.
 
