@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "account-manager",
+	"version": "${version}",
+	"name": "Account Manager",
+	"description": "A Minecraft client-side account and profile management mod with Microsoft authentication, profile tools, skin preview and customization utilities.",
+	"authors": [
+		"te5r"
+	],
+	"license": "All-Rights-Reserved",
+	"icon": "assets/account-manager/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.ahmet.accountmanager.AccountManager"
+		],
+		"client": [
+			"com.ahmet.accountmanager.client.AccountManagerClient"
+		]
+	},
+	"mixins": [
+    {
+        "config": "account-manager.client.mixins.json",
+        "environment": "client"
+    }
+],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
