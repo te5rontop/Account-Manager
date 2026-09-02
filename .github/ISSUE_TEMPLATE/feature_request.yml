@@ -1,0 +1,73 @@
+name: Feature Request
+description: Suggest an improvement or new feature for Account Manager
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement to Account Manager.
+
+        Please focus on the user-facing problem and desired behavior. Requests that require bypassing Microsoft, Xbox, Minecraft Services, launcher authentication, or account-security controls will not be accepted.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the limitation or workflow that could be improved.
+      placeholder: Explain the problem from a user's point of view.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed feature
+      description: Describe what you would like Account Manager to do.
+      placeholder: Describe the desired behavior and where it should appear in the UI.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature area
+      options:
+        - Account Manager UI
+        - Microsoft sign-in
+        - Minecraft profile management
+        - Skin management
+        - IGN management
+        - Multiplayer integration
+        - Installation / release workflow
+        - Accessibility / usability
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional. Describe any workaround or alternative approach you have tried.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add screenshots, mockups, or extra details if useful. Do not include passwords, tokens, secrets, or private account data.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I checked existing issues for a similar request.
+          required: true
+        - label: This request does not depend on bypassing Microsoft, Xbox, Minecraft Services, or launcher security controls.
+          required: true
