@@ -23,7 +23,7 @@ A client-side **Minecraft: Java Edition Fabric mod** focused on Microsoft sign-i
 > **Fabric Loader:** 0.19.3+  
 > **Java:** 25+  
 > **Author:** te5r  
-> **Discord:** `@te5rontop`
+> **Discord:** `@te5rontop`.
 
 ## Features
 
@@ -197,6 +197,6 @@ Minecraft is a trademark of Microsoft Corporation.
 <div align="center">
 
 Made by **te5r.**  
-Discord: **@te5rontop**
+Discord: **@te5rontop**.
 
 </div>
