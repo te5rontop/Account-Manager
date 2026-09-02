@@ -120,7 +120,7 @@ Do not install a `-sources.jar` as the normal mod.
 
 ### Where do I report a bug?
 
-Contact me directly on Discord: **@te5rontop**.
+Contact me directly on Discord: **@te5rontop**
 
 Please include your Minecraft version, Fabric Loader version, Fabric API version, Java version, clear reproduction steps, and any relevant logs or screenshots. Never send Microsoft passwords, access tokens, refresh tokens, authorization codes, Xbox tokens, or XSTS tokens.
 
