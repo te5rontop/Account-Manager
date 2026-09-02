@@ -43,15 +43,17 @@ A client-side **Minecraft: Java Edition Fabric mod** focused on Microsoft sign-i
 
 ## Screenshots
 
-Screenshots of the Account Manager interface will be added here.
+### Account Manager
 
-Recommended showcase images:
+![Account Manager](screenshots/account-manager.png)
 
-- Multiplayer screen with the **Account Manager** button
-- Main Account Manager panel
-- Profile Management screen
-- Skin Management / preview screen
-- Microsoft sign-in status view
+### Profile Management
+
+![Profile Management](screenshots/profile-management.png)
+
+### Skin Management
+
+![Skin Management](screenshots/skin-management.png)
 
 ## Download
 
