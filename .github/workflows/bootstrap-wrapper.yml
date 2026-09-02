@@ -1,0 +1,55 @@
+name: Bootstrap Gradle Wrapper
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap-wrapper:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Stop if wrapper JAR already exists
+        id: wrapper
+        shell: bash
+        run: |
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up JDK 25
+        if: steps.wrapper.outputs.exists == 'false'
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+
+      - name: Set up Gradle 9.5.1
+        if: steps.wrapper.outputs.exists == 'false'
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '9.5.1'
+
+      - name: Generate Gradle wrapper
+        if: steps.wrapper.outputs.exists == 'false'
+        run: gradle wrapper --gradle-version 9.5.1
+
+      - name: Commit generated wrapper JAR
+        if: steps.wrapper.outputs.exists == 'false'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gradle/wrapper/gradle-wrapper.jar gradlew gradlew.bat gradle/wrapper/gradle-wrapper.properties
+          git commit -m "build: add Gradle wrapper binary"
+          git push
