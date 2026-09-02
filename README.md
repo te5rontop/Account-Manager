@@ -90,6 +90,54 @@ Open:
 
 From there you can sign in with Microsoft, inspect authentication status, open Profile Management, preview skins, validate Minecraft names, and refresh Minecraft profile information.
 
+## Support & FAQ
+
+### Why do I see `App Not Authorized`?
+
+Account Manager's Microsoft authentication flow is implemented, but Minecraft Services access for new third-party applications is manually reviewed by Minecraft. Until this application is approved and allowlisted, Minecraft profile-service features may return `App Not Authorized`.
+
+This can affect profile loading, IGN / UUID retrieval, skin uploading and Minecraft name changes. This notice will be updated once access is approved.
+
+### Which Minecraft version is supported?
+
+Account Manager v1.0.0 is built for **Minecraft: Java Edition 26.1.2**.
+
+### Do I need Fabric API?
+
+Yes. Install **Fabric Loader** and **Fabric API** for Minecraft 26.1.2 before launching the mod.
+
+### Which Java version do I need?
+
+Use **Java 25 or newer** for this release.
+
+### Which file should I download?
+
+Download the normal release file:
+
+`account-manager-1.0.0.jar`
+
+Do not install a `-sources.jar` as the normal mod.
+
+### Where do I report a bug?
+
+Open the repository's **Issues** page and choose **Bug Report**. Include your Minecraft version, Fabric Loader version, Fabric API version, Java version, reproduction steps and relevant logs or screenshots.
+
+Before opening a new report, check whether the same issue has already been reported.
+
+### Where do I request a feature?
+
+Open the repository's **Issues** page and choose **Feature Request**.
+
+### How should I report a security issue?
+
+Do not post sensitive authentication or security details in a public issue. Follow the instructions in [SECURITY.md](SECURITY.md).
+
+Never share Microsoft passwords, access tokens, refresh tokens, authorization codes, Xbox tokens or XSTS tokens.
+
+### Is Account Manager affiliated with Mojang or Microsoft?
+
+No. Account Manager is an independent community project and is not affiliated with, endorsed by, or sponsored by Mojang Studios, Microsoft, Xbox or Fabric.
+
 ## Security
 
 Account Manager is designed as a public/native desktop OAuth client.
