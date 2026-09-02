@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Releases and downloads
+    url: https://github.com/te5rontop/Account-Manager/releases
+    about: Download official Account Manager releases here.
+  - name: Security reminder
+    url: https://github.com/te5rontop/Account-Manager#security
+    about: Do not post passwords, tokens, authorization codes, or other credentials in public issues.
