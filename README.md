@@ -120,9 +120,9 @@ Do not install a `-sources.jar` as the normal mod.
 
 ### Where do I report a bug?
 
-Open the repository's **Issues** page and choose **Bug Report**. Include your Minecraft version, Fabric Loader version, Fabric API version, Java version, reproduction steps and relevant logs or screenshots.
+Contact me directly on Discord: **@te5rontop**.
 
-Before opening a new report, check whether the same issue has already been reported.
+Please include your Minecraft version, Fabric Loader version, Fabric API version, Java version, clear reproduction steps, and any relevant logs or screenshots. Never send Microsoft passwords, access tokens, refresh tokens, authorization codes, Xbox tokens, or XSTS tokens.
 
 ### Where do I request a feature?
 
