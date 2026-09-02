@@ -1,0 +1,123 @@
+name: Bug Report
+description: Report a reproducible problem with Account Manager
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        **Security reminder:** Never include Microsoft passwords, access tokens, refresh tokens, Xbox/XSTS tokens, authorization codes, client secrets, or other credentials in an issue or log attachment.
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Account Manager version
+      description: Example: v1.0.0
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      placeholder: 26.1.2
+    validations:
+      required: true
+
+  - type: input
+    id: fabric-loader
+    attributes:
+      label: Fabric Loader version
+      placeholder: 0.19.3
+    validations:
+      required: true
+
+  - type: input
+    id: fabric-api
+    attributes:
+      label: Fabric API version
+      placeholder: 0.155.2+26.1.2
+    validations:
+      required: false
+
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      placeholder: 25
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area affected
+      options:
+        - Account Manager screen
+        - Microsoft sign-in
+        - Minecraft profile loading
+        - Profile refresh
+        - Skin preview
+        - Skin upload
+        - IGN management
+        - Multiplayer screen integration
+        - Build / installation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem clearly.
+      placeholder: Tell us what you expected and what happened instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest set of steps that reproduces the issue.
+      placeholder: |
+        1. Open Multiplayer
+        2. Open Account Manager
+        3. Click ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: |
+        Paste only the relevant error lines or attach screenshots. Remove any credentials or sensitive account data before posting.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other installed mods
+      description: List other mods if they may be relevant. Write "None" if testing with only Account Manager and its required dependencies.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I am using an official Account Manager release or a build from this repository.
+          required: true
+        - label: I checked existing issues for duplicates.
+          required: true
+        - label: I removed passwords, tokens, secrets, and other credentials from anything I am posting.
+          required: true
