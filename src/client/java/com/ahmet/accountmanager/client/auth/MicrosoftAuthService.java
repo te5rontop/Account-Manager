@@ -1,5 +1,6 @@
 package com.ahmet.accountmanager.client.auth;
 
+import com.ahmet.accountmanager.client.AccountState;
 import com.microsoft.aad.msal4j.InteractiveRequestParameters;
 import com.microsoft.aad.msal4j.PublicClientApplication;
 import com.microsoft.aad.msal4j.SystemBrowserOptions;
@@ -7,11 +8,10 @@ import net.minecraft.util.Util;
 
 import java.net.URI;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import com.ahmet.accountmanager.client.AccountState;
 
 public final class MicrosoftAuthService {
-    private static volatile String activeMicrosoftAccessToken;
 
     private static final String AUTHORITY =
             "https://login.microsoftonline.com/consumers";
@@ -27,6 +27,10 @@ public final class MicrosoftAuthService {
 
     public static CompletableFuture<LoginResult> signIn() {
 
+        // Starting a new sign-in invalidates all previous async auth work and
+        // clears any older Minecraft token before another account is used.
+        long sessionGeneration = AuthSession.beginSignIn();
+
         try {
 
             PublicClientApplication application =
@@ -37,11 +41,11 @@ public final class MicrosoftAuthService {
 
             SystemBrowserOptions browserOptions =
                     SystemBrowserOptions.builder()
-                            .openBrowserAction(url -> {
-                                Util.getPlatform().openUri(
-                                        URI.create(url.toString())
-                                );
-                            })
+                            .openBrowserAction(url ->
+                                    Util.getPlatform().openUri(
+                                            URI.create(url.toString())
+                                    )
+                            )
                             .build();
 
             InteractiveRequestParameters parameters =
@@ -55,26 +59,42 @@ public final class MicrosoftAuthService {
                     .acquireToken(parameters)
                     .thenApply(result -> {
 
-                        try {
-                            activeMicrosoftAccessToken =
-                                    result.accessToken();
+                        if (!AuthSession.setMicrosoftAccessToken(
+                                sessionGeneration,
+                                result.accessToken()
+                        )) {
+                            throw new CancellationException(
+                                    "Authentication session changed."
+                            );
+                        }
 
+                        try {
                             MinecraftProfileService.MinecraftProfile profile =
                                     MinecraftProfileService.getProfile(
-                                            result.accessToken()
+                                            result.accessToken(),
+                                            sessionGeneration
                                     );
+
+                            ensureCurrentSession(sessionGeneration);
 
                             return new LoginResult(
                                     true,
                                     true,
-                                    result.account().username(),
+                                    result.account() != null
+                                            ? result.account().username()
+                                            : null,
                                     profile.ign(),
                                     profile.uuid(),
                                     profile.skinUrl(),
                                     "Minecraft profile loaded."
                             );
 
+                        } catch (CancellationException exception) {
+                            throw exception;
+
                         } catch (Exception exception) {
+
+                            ensureCurrentSession(sessionGeneration);
 
                             String errorMessage =
                                     exception.getMessage() == null
@@ -107,6 +127,12 @@ public final class MicrosoftAuthService {
 
         } catch (Exception exception) {
 
+            // If setup itself fails, invalidate the generation that was just
+            // created so no partially-started login can later restore state.
+            if (AuthSession.isCurrent(sessionGeneration)) {
+                AuthSession.clearAll();
+            }
+
             return CompletableFuture.completedFuture(
                     new LoginResult(
                             false,
@@ -129,20 +155,21 @@ public final class MicrosoftAuthService {
             String minecraftUuid,
             String skinUrl,
             String message
-    ) {}
-        public static boolean canRefreshMinecraftProfile() {
+    ) {
+    }
 
-            return activeMicrosoftAccessToken != null
-                    && !activeMicrosoftAccessToken.isBlank();
-        }
-        public static CompletableFuture<LoginResult> refreshMinecraftProfile() {
+    public static boolean canRefreshMinecraftProfile() {
+        return AuthSession.hasMicrosoftAccessToken();
+    }
 
-            return CompletableFuture.supplyAsync(() -> {
+    public static CompletableFuture<LoginResult> refreshMinecraftProfile() {
 
-                if (activeMicrosoftAccessToken == null
-                        || activeMicrosoftAccessToken.isBlank()) {
+        AuthSession.TokenSnapshot snapshot =
+                AuthSession.microsoftTokenSnapshot();
 
-                    return new LoginResult(
+        if (!snapshot.isPresent()) {
+            return CompletableFuture.completedFuture(
+                    new LoginResult(
                             false,
                             false,
                             null,
@@ -150,61 +177,82 @@ public final class MicrosoftAuthService {
                             null,
                             null,
                             "Microsoft sign-in is required."
-                    );
-                }
-
-                try {
-
-                    MinecraftProfileService.MinecraftProfile profile =
-                            MinecraftProfileService.getProfile(
-                                    activeMicrosoftAccessToken
-                            );
-
-                    return new LoginResult(
-                            true,
-                            true,
-                            AccountState.microsoftAccount.isBlank()
-                                    ? null
-                                    : AccountState.microsoftAccount,
-                            profile.ign(),
-                            profile.uuid(),
-                            profile.skinUrl(),
-                            "Minecraft profile refreshed."
-                    );
-
-                } catch (Exception exception) {
-
-                    String errorMessage =
-                            exception.getMessage() == null
-                                    ? ""
-                                    : exception.getMessage();
-
-                    String lowerMessage =
-                            errorMessage.toLowerCase();
-
-                    boolean authorizationRejected =
-                            errorMessage.contains("403")
-                                    || lowerMessage.contains("app registration")
-                                    || lowerMessage.contains("not authorized");
-
-                    return new LoginResult(
-                            true,
-                            false,
-                            AccountState.microsoftAccount.isBlank()
-                                    ? null
-                                    : AccountState.microsoftAccount,
-                            null,
-                            null,
-                            null,
-                            authorizationRejected
-                                    ? "Minecraft Services rejected this app registration."
-                                    : "Minecraft profile refresh failed."
-                    );
-                }
-            });
+                    )
+            );
         }
-    public static void clearSession() {
-        activeMicrosoftAccessToken = null;
+
+        return CompletableFuture.supplyAsync(() -> {
+
+            ensureCurrentSession(snapshot.generation());
+
+            try {
+
+                MinecraftProfileService.MinecraftProfile profile =
+                        MinecraftProfileService.getProfile(
+                                snapshot.token(),
+                                snapshot.generation()
+                        );
+
+                ensureCurrentSession(snapshot.generation());
+
+                return new LoginResult(
+                        true,
+                        true,
+                        AccountState.microsoftAccount.isBlank()
+                                ? null
+                                : AccountState.microsoftAccount,
+                        profile.ign(),
+                        profile.uuid(),
+                        profile.skinUrl(),
+                        "Minecraft profile refreshed."
+                );
+
+            } catch (CancellationException exception) {
+                throw exception;
+
+            } catch (Exception exception) {
+
+                ensureCurrentSession(snapshot.generation());
+
+                String errorMessage =
+                        exception.getMessage() == null
+                                ? ""
+                                : exception.getMessage();
+
+                String lowerMessage =
+                        errorMessage.toLowerCase();
+
+                boolean authorizationRejected =
+                        errorMessage.contains("403")
+                                || lowerMessage.contains("app registration")
+                                || lowerMessage.contains("not authorized");
+
+                return new LoginResult(
+                        true,
+                        false,
+                        AccountState.microsoftAccount.isBlank()
+                                ? null
+                                : AccountState.microsoftAccount,
+                        null,
+                        null,
+                        null,
+                        authorizationRejected
+                                ? "Minecraft Services rejected this app registration."
+                                : "Minecraft profile refresh failed."
+                );
+            }
+        });
     }
 
+    public static void clearSession() {
+        AuthSession.clearAll();
     }
+
+    private static void ensureCurrentSession(long expectedGeneration) {
+        if (!AuthSession.isCurrent(expectedGeneration)) {
+            throw new CancellationException(
+                    "Authentication session changed."
+            );
+        }
+    }
+}
