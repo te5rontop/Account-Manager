@@ -36,8 +36,8 @@ A client-side **Minecraft: Java Edition Fabric mod** focused on Microsoft sign-i
 - Skin PNG selection and validation
 - 64x64 Minecraft skin preview
 - Classic / Slim player model preview
-- Minecraft skin upload integration when Minecraft Services access is available
-- Minecraft IGN change integration when Minecraft Services access is available
+- Minecraft skin upload integration through Minecraft Services
+- Minecraft IGN change integration through Minecraft Services
 - In-memory authentication state with stale-session protection
 - Custom Account Manager UI and in-game branding
 
@@ -65,13 +65,13 @@ You can also browse all published versions on the **[Releases page](https://gith
 
 Do not install a `-sources.jar` file as the normal mod.
 
-## Current Minecraft Services Status
+## Minecraft Services Status
 
-Microsoft OAuth sign-in is implemented and works through the standard Microsoft authentication flow.
+Account Manager's Microsoft Entra application has been approved for Minecraft Services access.
 
-Minecraft manually reviews new third-party applications that request access to the Java Edition game service APIs. Until this application's Microsoft Entra Client ID is approved and added to Minecraft's allow list, Minecraft profile-service features may display **App Not Authorized**.
+The standard Microsoft OAuth -> Xbox Live -> XSTS -> Minecraft Services flow has been successfully verified with Account Manager v1.0.1. Minecraft profile loading, IGN / UUID retrieval, skin uploading and Minecraft profile-name changes have been tested successfully after authorization was granted.
 
-The mod does **not** use another launcher's Client ID and does not attempt to bypass Minecraft Services application authorization.
+The mod uses its own Microsoft Entra public-client registration and does not use another launcher's Client ID or attempt to bypass Minecraft Services authorization.
 
 ## Installation
 
@@ -92,11 +92,9 @@ From there you can sign in with Microsoft, inspect authentication status, open P
 
 ## Support & FAQ
 
-### Why do I see `App Not Authorized`?
+### Is Minecraft Services access active?
 
-Account Manager's Microsoft authentication flow is implemented, but Minecraft Services access for new third-party applications is manually reviewed by Minecraft. Until this application is approved and allowlisted, Minecraft profile-service features may return `App Not Authorized`.
-
-This can affect profile loading, IGN / UUID retrieval, skin uploading and Minecraft name changes. This notice will be updated once access is approved.
+Yes. Account Manager's Microsoft Entra application has been approved for Minecraft Services access. The profile flow and profile-management features have been re-tested successfully with v1.0.1.
 
 ### Which Minecraft version is supported?
 
