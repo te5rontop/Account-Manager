@@ -23,11 +23,11 @@ Security and reliability maintenance release for Account Manager.
 - Internal authentication-session handling was refactored without intentionally changing the public Account Manager workflow.
 - Project version updated to 1.0.1.
 
-### Known Limitation
+### Minecraft Services Authorization
 
-- Account Manager is still awaiting Minecraft Services allow-list approval for its Microsoft Entra application.
-- Until approval is granted, Minecraft profile-service features may return `App Not Authorized`.
-- This can affect profile loading, IGN/UUID retrieval, skin uploading and Minecraft name changes.
+- **Status updated 2026-09-15:** Account Manager's Microsoft Entra application has been approved for Minecraft Services access.
+- The Microsoft OAuth -> Xbox Live -> XSTS -> Minecraft Services flow was re-tested successfully with v1.0.1 after authorization was granted.
+- Minecraft profile loading, IGN / UUID retrieval, skin uploading and Minecraft profile-name changes were verified working successfully.
 
 ## [1.0.0] - 2026-09-02
 
@@ -65,13 +65,11 @@ Initial public release of Account Manager for Minecraft: Java Edition 26.1.2 usi
 - Fabric API compatible with Minecraft 26.1.2
 - Java 25+
 
-### Known Limitation
+### Historical Limitation at Release
 
-- New third-party Minecraft Java Edition service integrations require Minecraft Services allow-list approval.
-- Account Manager is currently awaiting this authorization.
-- Until the application's Client ID is approved, Minecraft profile-service features may return `App Not Authorized`.
-- This can affect profile loading, IGN/UUID retrieval, skin uploading and Minecraft name changes.
-- Account Manager does not use another application's Client ID and does not attempt to bypass Minecraft Services authorization.
+- At the time v1.0.0 was published, the application's Microsoft Entra Client ID was still awaiting Minecraft Services allow-list approval.
+- This limitation was later resolved when Minecraft Services access was approved and successfully re-tested with v1.0.1 on 2026-09-15.
+- Account Manager uses its own Microsoft Entra public-client registration and does not use another application's Client ID or attempt to bypass Minecraft Services authorization.
 
 ### Security
 
